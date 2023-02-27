@@ -2,11 +2,12 @@ package database
 
 import (
 	"fmt"
-	"log"
 
-	"github.com/ch0ppy35/beer-docs/utils"
+	"github.com/ch0ppy35/beer-docs/internal/utils"
+	l "github.com/sirupsen/logrus"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var Database *gorm.DB
@@ -19,12 +20,14 @@ func Connect() {
 	databaseName := utils.GetEnv("DB_NAME", "svc_beer")
 	port := utils.GetEnv("DB_PORT", "5432")
 
-	connectionstring := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", host, username, password, databaseName, port)
-	Database, err = gorm.Open(postgres.Open(connectionstring), &gorm.Config{})
+	connectionstring := fmt.Sprintf(
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+		host, username, password, databaseName, port)
+	Database, err = gorm.Open(postgres.Open(connectionstring), &gorm.Config{Logger: logger.Default.LogMode(logger.Silent)})
 
 	if err != nil {
 		panic(err)
 	} else {
-		log.Println("Successfully connected to the database")
+		l.Info("Connected to the database...")
 	}
 }

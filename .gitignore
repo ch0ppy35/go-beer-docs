@@ -1,0 +1,5 @@
+# Script for dev db in codespaces
+docker_pg.sh
+
+bin/
+.DS_Store
