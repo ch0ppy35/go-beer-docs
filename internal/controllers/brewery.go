@@ -112,5 +112,5 @@ func (b *BreweryController) DeleteBrewery(c *gin.Context) {
 	}
 
 	d.Database.Delete(&brewery)
-	c.JSON(http.StatusOK, gin.H{"data": true})
+	c.JSON(http.StatusOK, gin.H{"deleted": true})
 }

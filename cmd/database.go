@@ -1,14 +1,14 @@
 package cmd
 
 import (
-	"github.com/ch0ppy35/beer-docs/internal/database"
+	d "github.com/ch0ppy35/beer-docs/internal/database"
 	"github.com/ch0ppy35/beer-docs/internal/models"
 	l "github.com/sirupsen/logrus"
 )
 
 func LoadAndMigrateDatabase() {
-	database.Connect()
+	d.Connect()
 	l.Info("Running database migrations...")
-	database.Database.AutoMigrate(&models.BeerModel{})
+	d.Database.AutoMigrate(&models.BeerModel{}, &models.BreweryModel{})
 	l.Info("Database migrations complete!")
 }

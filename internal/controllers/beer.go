@@ -53,8 +53,13 @@ func (b *BeerController) CreateBeer(c *gin.Context) {
 	// Create the beer
 	beer := models.BeerModel{BeerName: input.BeerName, Brewery: brewery}
 	d.Database.Create(&beer)
+	// Map values from BeerModel to BeerResponse
+	beerResponse := BeerResponse{
+		BeerName: beer.BeerName,
+		Brewery:  BreweryInput{Name: beer.Brewery.Name},
+	}
 
-	c.JSON(http.StatusOK, gin.H{"Response": beer})
+	c.JSON(http.StatusOK, gin.H{"Beer": beerResponse})
 }
 
 // GET /beers
@@ -132,5 +137,5 @@ func (b *BeerController) DeleteBeer(c *gin.Context) {
 
 	d.Database.Delete(&beer)
 
-	c.JSON(http.StatusOK, gin.H{"data": true})
+	c.JSON(http.StatusOK, gin.H{"deleted": true})
 }
