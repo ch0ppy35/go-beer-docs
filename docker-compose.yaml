@@ -1,7 +1,22 @@
 version: "3.8"
 services:
   app:
-    network_mode: "host"
     build: .
     environment:
-      - HTTP_PORT=8080
+      HTTP_PORT: 8080
+      DB_HOST: postgres
+    ports:
+      - 8080:8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: svc_beer
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
