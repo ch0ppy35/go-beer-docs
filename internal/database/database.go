@@ -4,16 +4,18 @@ import (
 	"fmt"
 
 	"github.com/ch0ppy35/beer-docs/internal/utils"
+	gorm_logrus "github.com/onrik/gorm-logrus"
 	l "github.com/sirupsen/logrus"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 var Database *gorm.DB
 
 func Connect() {
 	var err error
+	dbLogger := gorm_logrus.New()
+	dbLogger.Debug = false
 	host := utils.GetEnv("DB_HOST", "127.0.0.1")
 	username := utils.GetEnv("DB_USER", "postgres")
 	password := utils.GetEnv("DB_PASSWORD", "mysecretpassword")
@@ -23,7 +25,7 @@ func Connect() {
 	connectionstring := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
 		host, username, password, databaseName, port)
-	Database, err = gorm.Open(postgres.Open(connectionstring), &gorm.Config{Logger: logger.Default.LogMode(logger.Silent)})
+	Database, err = gorm.Open(postgres.Open(connectionstring), &gorm.Config{Logger: dbLogger})
 
 	if err != nil {
 		panic(err)
