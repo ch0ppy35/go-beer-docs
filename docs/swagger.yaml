@@ -1,0 +1,161 @@
+definitions:
+  controllers.BeerErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  controllers.BeerInput:
+    properties:
+      beername:
+        type: string
+      brewery:
+        $ref: '#/definitions/controllers.BreweryInput'
+    required:
+    - beername
+    - brewery
+    type: object
+  controllers.BeerResponse:
+    properties:
+      brewery:
+        $ref: '#/definitions/controllers.BreweryInput'
+      name:
+        type: string
+    type: object
+  controllers.BreweryInput:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  controllers.DeletedBeerResponse:
+    properties:
+      deleted:
+        type: boolean
+    type: object
+info:
+  contact: {}
+paths:
+  /beers:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all beers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            items:
+              $ref: '#/definitions/controllers.BeerResponse'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.BeerErrorResponse'
+      summary: Get a list of all beers
+      tags:
+      - Beers
+    post:
+      consumes:
+      - application/json
+      description: Create a new beer
+      parameters:
+      - description: Beer input
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.BeerInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/controllers.BeerResponse'
+        "400":
+          description: Ensure input is correct!
+          schema:
+            $ref: '#/definitions/controllers.BeerErrorResponse'
+      summary: Create a new beer
+      tags:
+      - Beers
+  /beers/{id}:
+    delete:
+      parameters:
+      - description: Beer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.DeletedBeerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.BeerErrorResponse'
+      summary: Delete a beer by ID
+      tags:
+      - Beers
+    get:
+      parameters:
+      - description: Beer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.BeerResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.BeerErrorResponse'
+      summary: Get a beer by ID
+      tags:
+      - Beers
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Beer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Beer input payload
+        in: body
+        name: beer
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.BeerInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.BeerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.BeerErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.BeerErrorResponse'
+      summary: Update a beer by ID
+      tags:
+      - Beers
+swagger: "2.0"

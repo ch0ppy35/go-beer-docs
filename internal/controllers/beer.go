@@ -24,6 +24,17 @@ type BeerResponse struct {
 	Brewery  BreweryInput `json:"brewery"`
 }
 
+type BeersResponse struct {
+}
+
+type DeletedBeerResponse struct {
+	Deleted bool `json:"deleted"`
+}
+
+type BeerErrorResponse struct {
+	Error string `string:"error"`
+}
+
 func NewBeerController(e *gin.Engine) {
 	b := BeerController{}
 	v1 := e.Group("/api/v1/beers")
@@ -36,13 +47,21 @@ func NewBeerController(e *gin.Engine) {
 	}
 }
 
-// POST /beers
-// Create new beer
+// CreateBeer godoc
+// @Summary Create a new beer
+// @Description Create a new beer
+// @Tags Beers
+// @Accept json
+// @Produce json
+// @Param input body BeerInput true "Beer input"
+// @Success 200 {object} BeerResponse "Successful operation"
+// @Failure 400 {object} BeerErrorResponse "Ensure input is correct!"
+// @Router /beers [post]
 func (b *BeerController) CreateBeer(c *gin.Context) {
 	// Validate input
 	var input BeerInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Ensure input is correct! " + err.Error()})
+		c.JSON(http.StatusBadRequest, BeerErrorResponse{Error: "Ensure input is correct! " + err.Error()})
 		return
 	}
 
@@ -59,14 +78,25 @@ func (b *BeerController) CreateBeer(c *gin.Context) {
 		Brewery:  BreweryInput{Name: beer.Brewery.Name},
 	}
 
-	c.JSON(http.StatusOK, gin.H{"Beer": beerResponse})
+	c.JSON(http.StatusOK, beerResponse)
 }
 
-// GET /beers
-// Get all Beers
+// GetBeers godoc
+// @Summary Get a list of all beers
+// @Description Get a list of all beers
+// @Tags Beers
+// @Accept json
+// @Produce json
+// @Success 200 {array} BeerResponse "Successful operation"
+// @Failure 404 {object} BeerErrorResponse
+// @Router /beers [get]
 func (b *BeerController) GetBeers(c *gin.Context) {
 	var beers []models.BeerModel
 	d.Database.Preload("Brewery").Find(&beers)
+	if len(beers) == 0 {
+		c.JSON(http.StatusNotFound, BeerErrorResponse{Error: "No records found!"})
+		return
+	}
 
 	// Create a new slice of BeerResponse structs
 	var beerResponses []BeerResponse
@@ -79,40 +109,52 @@ func (b *BeerController) GetBeers(c *gin.Context) {
 		})
 	}
 
-	c.JSON(http.StatusOK, gin.H{"beers": beerResponses})
+	c.JSON(http.StatusOK, beerResponses)
 }
 
-// GET /beers/:id
-// Find a beer
+// GetSingleBeer returns a single beer by ID
+// @Summary Get a beer by ID
+// @Tags Beers
+// @Param id path int true "Beer ID"
+// @Produce json
+// @Success 200 {object} BeerResponse
+// @Failure 404 {object} BeerErrorResponse
+// @Router /beers/{id} [get]
 func (b *BeerController) GetSingleBeer(c *gin.Context) {
 	var beer models.BeerModel
 
 	if err := d.Database.Preload("Brewery").Where("id = ?", c.Param("id")).First(&beer).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Record not found!"})
+		c.JSON(http.StatusNotFound, BeerErrorResponse{Error: "Record not found!"})
 		return
 	}
 
-	// Map values from BeerModel to BeerResponse
-	beerResponse := BeerResponse{
+	c.JSON(http.StatusOK, BeerResponse{
 		BeerName: beer.BeerName,
 		Brewery:  BreweryInput{Name: beer.Brewery.Name},
-	}
-
-	c.JSON(http.StatusOK, gin.H{"beer": beerResponse})
+	})
 }
 
-// PATCH /beers/:id
-// Update a beer
+// UpdateBeer updates an existing beer record by ID
+// @Summary Update a beer by ID
+// @Tags Beers
+// @Param id path int true "Beer ID"
+// @Accept json
+// @Produce json
+// @Param beer body BeerInput true "Beer input payload"
+// @Success 200 {object} BeerResponse
+// @Failure 400 {object} BeerErrorResponse
+// @Failure 404 {object} BeerErrorResponse
+// @Router /beers/{id} [patch]
 func (b *BeerController) UpdateBeer(c *gin.Context) {
 	var beer models.BeerModel
 	if err := d.Database.Where("id = ?", c.Param("id")).First(&beer).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		c.JSON(http.StatusNotFound, BeerErrorResponse{Error: "Record not found!"})
 		return
 	}
 
 	var input BeerInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Ensure input is correct! " + err.Error()})
+		c.JSON(http.StatusBadRequest, BeerErrorResponse{Error: "Ensure input is correct! " + err.Error()})
 		return
 	}
 
@@ -123,19 +165,30 @@ func (b *BeerController) UpdateBeer(c *gin.Context) {
 	// Update the beer
 	d.Database.Model(&beer).Updates(models.BeerModel{BeerName: input.BeerName, Brewery: brewery})
 
-	c.JSON(http.StatusOK, gin.H{"data": beer})
+	// Map values from BeerModel to BeerResponse
+
+	c.JSON(http.StatusOK, BeerResponse{
+		BeerName: beer.BeerName,
+		Brewery:  BreweryInput{Name: beer.Brewery.Name},
+	})
 }
 
-// DELETE /beers/:id
-// Delete a beer, but keep brewery in system
+// DeleteBeer deletes a beer by ID
+// @Summary Delete a beer by ID
+// @Tags Beers
+// @Param id path int true "Beer ID"
+// @Produce json
+// @Success 200 {object} DeletedBeerResponse
+// @Failure 400 {object} BeerErrorResponse
+// @Router /beers/{id} [delete]
 func (b *BeerController) DeleteBeer(c *gin.Context) {
 	var beer models.BeerModel
 	if err := d.Database.Where("id = ?", c.Param("id")).First(&beer).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		c.JSON(http.StatusBadRequest, BeerErrorResponse{Error: "Record not found!"})
 		return
 	}
 
 	d.Database.Delete(&beer)
 
-	c.JSON(http.StatusOK, gin.H{"deleted": true})
+	c.JSON(http.StatusOK, DeletedBeerResponse{Deleted: true})
 }

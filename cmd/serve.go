@@ -7,11 +7,14 @@ import (
 
 	l "github.com/sirupsen/logrus"
 
+	docs "github.com/ch0ppy35/beer-docs/docs"
 	"github.com/ch0ppy35/beer-docs/internal/controllers"
 	"github.com/ch0ppy35/beer-docs/internal/middleware"
 	"github.com/ch0ppy35/beer-docs/internal/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func init() {
@@ -43,6 +46,9 @@ func StartServer() {
 
 	// Start db connection and migration
 	LoadAndMigrateDatabase()
+	// gin-swagger middleware
+	docs.SwaggerInfo.BasePath = "/api/v1"
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	// Register controllers
 	controllers.NewHealthzController(r)
 	controllers.NewBreweryController(r)
