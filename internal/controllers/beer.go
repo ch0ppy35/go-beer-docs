@@ -72,13 +72,11 @@ func (b *BeerController) CreateBeer(c *gin.Context) {
 	// Create the beer
 	beer := models.BeerModel{BeerName: input.BeerName, Brewery: brewery}
 	d.Database.Create(&beer)
-	// Map values from BeerModel to BeerResponse
-	beerResponse := BeerResponse{
+
+	c.JSON(http.StatusOK, BeerResponse{
 		BeerName: beer.BeerName,
 		Brewery:  BreweryInput{Name: beer.Brewery.Name},
-	}
-
-	c.JSON(http.StatusOK, beerResponse)
+	})
 }
 
 // GetBeers godoc
