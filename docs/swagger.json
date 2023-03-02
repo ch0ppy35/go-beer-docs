@@ -189,6 +189,202 @@
                     }
                 }
             }
+        },
+        "/breweries": {
+            "get": {
+                "description": "Get a list of all breweries",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Breweries"
+                ],
+                "summary": "Get a list of all breweries",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controllers.BreweryResponse"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.BreweryErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Breweries"
+                ],
+                "summary": "Create a brewery",
+                "parameters": [
+                    {
+                        "description": "Brewery input payload",
+                        "name": "brewery",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.BreweryInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.BreweryResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.BreweryErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/breweries/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Breweries"
+                ],
+                "summary": "Get a single brewery by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Brewery ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.BreweryResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.BreweryErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a brewery only if there are no beers associated with it",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Breweries"
+                ],
+                "summary": "Delete a brewery",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Brewery ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.DeletedBreweryResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.BreweryErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.BreweryErrorResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "description": "Update a brewery by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Breweries"
+                ],
+                "summary": "Update a brewery",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Brewery ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Brewery Payload",
+                        "name": "brewery",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.BreweryInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.BreweryResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.BreweryErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.BreweryErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -226,6 +422,14 @@
                 }
             }
         },
+        "controllers.BreweryErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
         "controllers.BreweryInput": {
             "type": "object",
             "required": [
@@ -237,7 +441,26 @@
                 }
             }
         },
+        "controllers.BreweryResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "controllers.DeletedBeerResponse": {
+            "type": "object",
+            "properties": {
+                "deleted": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "controllers.DeletedBreweryResponse": {
             "type": "object",
             "properties": {
                 "deleted": {

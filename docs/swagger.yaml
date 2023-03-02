@@ -21,6 +21,11 @@ definitions:
       name:
         type: string
     type: object
+  controllers.BreweryErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
   controllers.BreweryInput:
     properties:
       name:
@@ -28,7 +33,19 @@ definitions:
     required:
     - name
     type: object
+  controllers.BreweryResponse:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
   controllers.DeletedBeerResponse:
+    properties:
+      deleted:
+        type: boolean
+    type: object
+  controllers.DeletedBreweryResponse:
     properties:
       deleted:
         type: boolean
@@ -158,4 +175,133 @@ paths:
       summary: Update a beer by ID
       tags:
       - Beers
+  /breweries:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all breweries
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controllers.BreweryResponse'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.BreweryErrorResponse'
+      summary: Get a list of all breweries
+      tags:
+      - Breweries
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Brewery input payload
+        in: body
+        name: brewery
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.BreweryInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.BreweryResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.BreweryErrorResponse'
+      summary: Create a brewery
+      tags:
+      - Breweries
+  /breweries/{id}:
+    delete:
+      description: Delete a brewery only if there are no beers associated with it
+      parameters:
+      - description: Brewery ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.DeletedBreweryResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.BreweryErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.BreweryErrorResponse'
+      summary: Delete a brewery
+      tags:
+      - Breweries
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Brewery ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.BreweryResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.BreweryErrorResponse'
+      summary: Get a single brewery by ID
+      tags:
+      - Breweries
+    patch:
+      consumes:
+      - application/json
+      description: Update a brewery by id
+      parameters:
+      - description: Brewery ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Brewery Payload
+        in: body
+        name: brewery
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.BreweryInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.BreweryResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.BreweryErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.BreweryErrorResponse'
+      summary: Update a brewery
+      tags:
+      - Breweries
 swagger: "2.0"

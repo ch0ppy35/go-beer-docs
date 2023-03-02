@@ -152,16 +152,24 @@ func (b *BeerController) UpdateBeer(c *gin.Context) {
 
 	// Look up or create the brewery
 	var brewery models.BreweryModel
-	d.Database.FirstOrCreate(&brewery, models.BreweryModel{Name: input.Brewery.Name})
+	if err := d.Database.Where("name = ?", input.Brewery.Name).First(&brewery).Error; err != nil {
+		// Brewery not found, create a new one
+		brewery = models.BreweryModel{Name: input.Brewery.Name}
+		d.Database.Create(&brewery)
+	} else {
+		// Brewery found, update it
+		brewery.Name = input.Brewery.Name
+		d.Database.Save(&brewery)
+	}
 
 	// Update the beer
-	d.Database.Model(&beer).Updates(models.BeerModel{BeerName: input.BeerName, Brewery: brewery})
-
-	// Map values from BeerModel to BeerResponse
+	beer.BeerName = input.BeerName
+	beer.Brewery = brewery
+	d.Database.Save(&beer)
 
 	c.JSON(http.StatusOK, BeerResponse{
 		BeerName: beer.BeerName,
-		Brewery:  BreweryInput{Name: beer.Brewery.Name},
+		Brewery:  BreweryInput{Name: brewery.Name},
 	})
 }
 

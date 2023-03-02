@@ -38,21 +38,20 @@ func StartServer() {
 	gin.SetMode(gin.ReleaseMode)
 	p := utils.GetEnv("HTTP_PORT", "8080")
 	r := gin.New()
-
-	r.Use(middleware.JSONLogMiddleware())
+	// Setup middleware
 	r.Use(gin.Recovery())
+	r.Use(middleware.JSONLogMiddleware())
 	r.Use(middleware.RequestID(middleware.RequestIDOptions{AllowSetting: false}))
 	r.Use(middleware.CORS(middleware.CORSOptions{}))
-
-	// Start db connection and migration
-	LoadAndMigrateDatabase()
 	// gin-swagger middleware
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	// Start db connection and migrations
+	LoadAndMigrateDatabase()
 	// Register controllers
-	controllers.NewHealthzController(r)
 	controllers.NewBreweryController(r)
 	controllers.NewBeerController(r)
+	controllers.NewHealthzController(r)
 	// Start the server
 	go func() {
 		if err := r.Run(":" + p); err != nil {
