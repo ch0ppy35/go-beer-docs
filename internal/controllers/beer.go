@@ -15,16 +15,9 @@ type BeerInput struct {
 	Brewery  BreweryInput `json:"brewery" binding:"required"`
 }
 
-type BreweryInput struct {
-	Name string `json:"name" binding:"required"`
-}
-
 type BeerResponse struct {
 	BeerName string       `json:"name"`
 	Brewery  BreweryInput `json:"brewery"`
-}
-
-type BeersResponse struct {
 }
 
 type DeletedBeerResponse struct {
@@ -42,7 +35,7 @@ func NewBeerController(e *gin.Engine) {
 		v1.POST("/", b.CreateBeer)
 		v1.GET("/", b.GetBeers)
 		v1.GET("/:id", b.GetSingleBeer)
-		v1.PUT("/:id", b.UpdateBeer)
+		v1.PATCH("/:id", b.UpdateBeer)
 		v1.DELETE("/:id", b.DeleteBeer)
 	}
 }
@@ -98,7 +91,6 @@ func (b *BeerController) GetBeers(c *gin.Context) {
 
 	// Create a new slice of BeerResponse structs
 	var beerResponses []BeerResponse
-
 	// Map values from BeerModel to BeerResponse
 	for _, beer := range beers {
 		beerResponses = append(beerResponses, BeerResponse{
@@ -110,6 +102,7 @@ func (b *BeerController) GetBeers(c *gin.Context) {
 	c.JSON(http.StatusOK, beerResponses)
 }
 
+// GetSingleBeer godoc
 // GetSingleBeer returns a single beer by ID
 // @Summary Get a beer by ID
 // @Tags Beers
@@ -132,6 +125,7 @@ func (b *BeerController) GetSingleBeer(c *gin.Context) {
 	})
 }
 
+// UpdateBeer godoc
 // UpdateBeer updates an existing beer record by ID
 // @Summary Update a beer by ID
 // @Tags Beers
@@ -171,6 +165,7 @@ func (b *BeerController) UpdateBeer(c *gin.Context) {
 	})
 }
 
+// DeleteBeer godoc
 // DeleteBeer deletes a beer by ID
 // @Summary Delete a beer by ID
 // @Tags Beers
