@@ -16,6 +16,36 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/beers": {
+            "get": {
+                "description": "Get a list of all beers",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Beers"
+                ],
+                "summary": "Get a list of all beers",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controllers.BeerResponse"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.BeerErrorResponse"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create a new beer",
                 "consumes": [
@@ -48,38 +78,6 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Ensure input is correct!",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.BeerErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/beers/": {
-            "get": {
-                "description": "Get a list of all beers",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Beers"
-                ],
-                "summary": "Get a list of all beers",
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/controllers.BeerResponse"
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/controllers.BeerErrorResponse"
                         }

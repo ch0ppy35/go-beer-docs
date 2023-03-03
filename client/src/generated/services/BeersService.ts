@@ -20,7 +20,7 @@ export class BeersService {
     public static getBeers(): CancelablePromise<Array<controllers_BeerResponse>> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/beers/',
+            url: '/beers',
             errors: {
                 404: `Not Found`,
             },
@@ -39,7 +39,7 @@ export class BeersService {
     ): CancelablePromise<controllers_BeerResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/beers/',
+            url: '/beers',
             body: input,
             errors: {
                 400: `Ensure input is correct!`,
