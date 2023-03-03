@@ -42,7 +42,7 @@ func StartServer() {
 	r.Use(gin.Recovery())
 	r.Use(middleware.JSONLogMiddleware())
 	r.Use(middleware.RequestID(middleware.RequestIDOptions{AllowSetting: false}))
-	r.Use(middleware.CORS(middleware.CORSOptions{}))
+	r.Use(middleware.CORS(middleware.CORSOptions{Origin: "*"}))
 	// gin-swagger middleware
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))

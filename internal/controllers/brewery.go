@@ -31,8 +31,8 @@ func NewBreweryController(e *gin.Engine) {
 	b := BreweryController{}
 	v1 := e.Group("/api/v1/breweries")
 	{
-		v1.POST("/", b.CreateBrewery)
-		v1.GET("/", b.GetBreweries)
+		v1.POST("", b.CreateBrewery)
+		v1.GET("", b.GetBreweries)
 		v1.GET("/:id", b.GetSingleBrewery)
 		v1.PATCH("/:id", b.UpdateBrewery)
 		v1.DELETE("/:id", b.DeleteBrewery)

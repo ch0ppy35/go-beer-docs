@@ -3,3 +3,4 @@ docker_pg.sh
 
 bin/
 .DS_Store
+node_modules/

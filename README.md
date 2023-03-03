@@ -1,6 +1,6 @@
 # go-beer-docs
 
-### Run In Docker
+## Run In Docker
 
 ```bash
 # Run this and wait for everything to start up
@@ -15,7 +15,7 @@ curl -s --location --request POST 'http://127.0.0.1:8080/api/v1/beers/' \
 --data-raw '{
     "beername": "Crank Yanker IPA",
     "brewery": {
-        "name": "Eddyline Brewery - USA"
+        "name": "Eddyline Brewery"
     }
 }' | jq
 curl -s --location --request POST 'http://127.0.0.1:8080/api/v1/beers/' \
