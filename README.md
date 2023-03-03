@@ -1,6 +1,6 @@
 # go-beer-docs
 
-### Run In Docker
+## Run In Docker
 
 ```bash
 # Run this and wait for everything to start up

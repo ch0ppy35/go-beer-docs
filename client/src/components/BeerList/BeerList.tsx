@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BeersService, controllers_BeerResponse } from '../../generated';
+import { Container, Table } from 'react-bootstrap';
 
 type BeerListProps = {};
 
@@ -38,22 +39,24 @@ const BeerList: React.FC<BeerListProps> = () => {
   }
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Beer Name</th>
-          <th>Brewery Name</th>
-        </tr>
-      </thead>
-      <tbody>
-        {beers.map(beer => (
-          <tr key={beer.name}>
-            <td>{beer.name}</td>
-            <td>{beer.brewery?.name}</td>
+    <Container className="my-4">
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>Beer Name</th>
+            <th>Brewery Name</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {beers.map(beer => (
+            <tr key={beer.name}>
+              <td>{beer.name}</td>
+              <td>{beer.brewery?.name}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </Container>
   );
 };
 

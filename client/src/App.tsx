@@ -1,4 +1,6 @@
 import BeerList from './components/BeerList/BeerList';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function App() {
   return (
