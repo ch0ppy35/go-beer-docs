@@ -14,7 +14,11 @@ const BeerList: React.FC<BeerListProps> = () => {
         setBeers(response);
       })
       .catch(error => {
-        setError(error.message);
+        if (error.response.status === 404) {
+          setError('No beers found!');
+        } else {
+          setError(error.message);
+        }
       })
       .finally(() => {
         setIsLoading(false);
