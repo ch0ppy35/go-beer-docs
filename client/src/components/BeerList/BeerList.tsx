@@ -5,12 +5,33 @@ type BeerListProps = {};
 
 const BeerList: React.FC<BeerListProps> = () => {
   const [beers, setBeers] = useState<Array<controllers_BeerResponse>>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
-    BeersService.getBeers().then(response => {
-      setBeers(response);
-    });
+    BeersService.getBeers()
+      .then(response => {
+        setBeers(response);
+      })
+      .catch(error => {
+        setError(error.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
+
+  if (isLoading) {
+    return <p>Loading beers...</p>;
+  }
+
+  if (error) {
+    return <p>Failed to fetch beers: {error}</p>;
+  }
+
+  if (beers.length === 0) {
+    return <p>No beers found!</p>;
+  }
 
   return (
     <table>
