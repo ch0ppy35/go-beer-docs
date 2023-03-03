@@ -80,7 +80,7 @@ func (b *BeerController) CreateBeer(c *gin.Context) {
 // @Produce json
 // @Success 200 {array} BeerResponse "Successful operation"
 // @Failure 404 {object} BeerErrorResponse
-// @Router /beers [get]
+// @Router /beers/ [get]
 func (b *BeerController) GetBeers(c *gin.Context) {
 	var beers []models.BeerModel
 	d.Database.Preload("Brewery").Find(&beers)

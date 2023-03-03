@@ -54,26 +54,6 @@ info:
   contact: {}
 paths:
   /beers:
-    get:
-      consumes:
-      - application/json
-      description: Get a list of all beers
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successful operation
-          schema:
-            items:
-              $ref: '#/definitions/controllers.BeerResponse'
-            type: array
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/controllers.BeerErrorResponse'
-      summary: Get a list of all beers
-      tags:
-      - Beers
     post:
       consumes:
       - application/json
@@ -97,6 +77,27 @@ paths:
           schema:
             $ref: '#/definitions/controllers.BeerErrorResponse'
       summary: Create a new beer
+      tags:
+      - Beers
+  /beers/:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all beers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            items:
+              $ref: '#/definitions/controllers.BeerResponse'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.BeerErrorResponse'
+      summary: Get a list of all beers
       tags:
       - Beers
   /beers/{id}:
