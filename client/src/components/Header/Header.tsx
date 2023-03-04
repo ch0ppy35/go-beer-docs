@@ -23,6 +23,11 @@ function Header() {
             <ul className="navbar-nav ms-auto">
               <li className="nav-item">
                 <a className="nav-link" href="/breweries">
+                  Beers
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="/breweries">
                   Breweries
                 </a>
               </li>

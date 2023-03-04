@@ -1,4 +1,3 @@
-
 import { BreweriesService, controllers_BreweryResponse } from '../../generated';
 import React, { useEffect, useState } from 'react';
 import { Container, Table } from 'react-bootstrap';
@@ -11,20 +10,22 @@ const BreweryList: React.FC<BreweryListProps> = () => {
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
-    BreweriesService.getBreweries()
-      .then(response => {
+    const fetchBreweries = async () => {
+      try {
+        const response = await BreweriesService.getBreweries();
         setBreweries(response);
-      })
-      .catch(error => {
+      } catch (error: any) {
         if (error.response.status === 404) {
           setError('No breweries found!');
         } else {
           setError(error.message);
         }
-      })
-      .finally(() => {
+      } finally {
         setIsLoading(false);
-      });
+      }
+    };
+
+    fetchBreweries();
   }, []);
 
   if (isLoading) {
