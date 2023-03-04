@@ -2,8 +2,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 function Header() {
   return (
-    <header className="bg-light">
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <header className="bg-dark">
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container">
           <a className="navbar-brand" href="/">
             Beer Tracker
