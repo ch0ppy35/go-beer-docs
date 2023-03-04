@@ -2,6 +2,7 @@ import BeerList from './components/BeerList/BeerList';
 import BreweryList from './components/BreweryList/BreweryList';
 import Header from './components/Header/Header';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
 
 
 function App() {
