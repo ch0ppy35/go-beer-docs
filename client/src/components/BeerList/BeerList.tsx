@@ -27,15 +27,15 @@ const BeerList: React.FC<BeerListProps> = () => {
   }, []);
 
   if (isLoading) {
-    return <p>Loading beers...</p>;
+    return <p className="text-light">Loading beers...</p>;
   }
 
   if (error) {
-    return <p>Failed to fetch beers: {error}</p>;
+    return <p className="text-light">Failed to fetch beers: {error}</p>;
   }
 
   if (beers.length === 0) {
-    return <p>No beers found!</p>;
+    return <p className="text-light">No beers found!</p>;
   }
 
   return (
