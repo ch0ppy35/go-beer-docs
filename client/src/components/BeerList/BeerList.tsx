@@ -40,7 +40,7 @@ const BeerList: React.FC<BeerListProps> = () => {
 
   return (
     <Container className="my-4">
-      <Table className="table-dark table-striped table-bordered">
+      <Table className="table-dark table-striped table-bordered table-hover">
         <thead>
           <tr>
             <th>Beer Name</th>

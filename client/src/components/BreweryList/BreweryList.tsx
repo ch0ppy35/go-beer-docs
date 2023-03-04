@@ -41,7 +41,7 @@ const BreweryList: React.FC<BreweryListProps> = () => {
 
   return (
     <Container className="my-4">
-      <Table className="table-dark table-striped table-bordered">
+      <Table className="table-dark table-striped table-bordered table-hover">
         <thead>
           <tr>
             <th>Brewery Name</th>
