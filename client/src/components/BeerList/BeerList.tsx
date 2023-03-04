@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { BeersService, controllers_BeerResponse } from '../../generated';
 import { Container, Table } from 'react-bootstrap';
+import { BeatLoader } from 'react-spinners';
+
 
 type BeerListProps = {};
 
@@ -10,24 +12,30 @@ const BeerList: React.FC<BeerListProps> = () => {
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
-    BeersService.getBeers()
-      .then(response => {
+    const fetchBeers = async () => {
+      try {
+        const response = await BeersService.getBeers();
         setBeers(response);
-      })
-      .catch(error => {
+      } catch (error: any) {
         if (error.response.status === 404) {
-          setError('No beers found!');
+          setError('No Beers found!');
         } else {
           setError(error.message);
         }
-      })
-      .finally(() => {
+      } finally {
         setIsLoading(false);
-      });
+      }
+    };
+
+    fetchBeers();
   }, []);
 
   if (isLoading) {
-    return <p className="text-light">Loading beers...</p>;
+    return (
+      <div className="loader-container">
+        <BeatLoader color={'#ffffff'} loading={isLoading} size={15} />
+      </div>
+    );
   }
 
   if (error) {

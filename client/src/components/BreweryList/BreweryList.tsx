@@ -1,6 +1,7 @@
 import { BreweriesService, controllers_BreweryResponse } from '../../generated';
 import React, { useEffect, useState } from 'react';
 import { Container, Table } from 'react-bootstrap';
+import { BeatLoader } from 'react-spinners';
 
 type BreweryListProps = {};
 
@@ -29,7 +30,11 @@ const BreweryList: React.FC<BreweryListProps> = () => {
   }, []);
 
   if (isLoading) {
-    return <p className="text-light">Loading breweries...</p>;
+    return (
+      <div className="loader-container">
+        <BeatLoader color={'#ffffff'} loading={isLoading} size={15} />
+      </div>
+    );
   }
 
   if (error) {
