@@ -43,3 +43,16 @@ curl -s --location --request POST 'http://127.0.0.1:8080/api/v1/beers/' \
     }
 }' | jq
 ```
+
+## Adding New Routes
+
+When new routes are added in Go, the React client lib needs to be generated again.
+
+In the project root run `swag init`.  Then generate the lib in the client directory.
+
+```bash
+cd client/
+bash gen_client_fetch_lib.sh
+```
+
+TODO — automate this.
